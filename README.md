@@ -11,7 +11,7 @@
     * 当我们写完代码，或者操作逻辑，它会现在你的虚拟DOM中去实现，
     * 如果你的虚拟DOM跑成功了，会跟你真是的DOM 去匹配
     * 不同的地方，将会插入到你的真是DOM中来。
-4. 隶书Facebook
+4. 隶属Facebook
     * 这是一个互联网巨头，它们出的框架，必属于经典了。
 
 
@@ -356,59 +356,106 @@
 ```html
 <body>
     <!-- 容器 -->
-    <div id="container">
-
-    </div>
+    <div id="container"> </div>
     <script type="text/babel"> 
-        var CheckBox = React.createClass({
-            // 初始化状态值
+
+        var Borad = React.createClass({
             getInitialState:function(){
-                return {
-                    checked: false
-                }
+                return ({
+                    comments: []
+                });
             },
-            
-            handleChecked:function(){
-                this.setState( { checked: !this.state.checked } )
+            updateComment: function(newText, i){
+                // console.log(newText,i );
+                var arr = this.state.comments;
+                arr[i] = newText;
+                // 更新我们的状态
+                this.setState( { comments: arr } );
+            }
+            ,
+            removeComment:function(i){
+                // console.log(i);
+                var arr = this.state.comments;
+                arr.splice(i,1); // arr.splice(从那个下标开始删除,删除多少个)
+                // 更新状态
+                this.setState({comments: arr});
+            },
+
+            eachComment: function(item, i){
+                return (
+                    <Comment deleteFromBoard={this.removeComment} updateCommentText={ this.updateComment } key={i} index={i}>{ item }</Comment>
+                );
+            }
+            ,
+            add: function(text) {
+                var arr = this.state.comments;
+                arr.push(text);
+                this.setState({comments: arr});
+            },
+            render: function(){
+                return (
+                    <div>
+                        <button onClick={ this.add.bind(null, "Default text") } className="button-info create">Add New</button>
+                        <div className="board">
+                            {
+                                this.state.comments.map(this.eachComment)
+                            } 
+                        </div>
+                    </div>
+                );
+            }
+        })
+
+    
+        var Comment = React.createClass({
+            getInitialState:function(){
+                return ( { editing: false } );
+            },
+            edit:function(){
+                this.setState( { editing: true });
+            },
+            remove:function(){
+                // alert("removeing comment!")
+                this.props.deleteFromBoard(this.props.index);
+            },
+            renderNormal: function(){
+                return (
+                    <div className="commentContainer">
+                        <div>{ this.props.children }</div>
+                        <button onClick={ this.edit } className="button-primary"> Edit </button>
+                        <button onClick={ this.remove} className="button-danger"> Remove </button>
+                    </div>
+                );
+            },
+
+            save:function(){
+                var val = this.refs.newText.value;
+                // console.log("拿到的值是： ",val);
+                this.props.updateCommentText(val, this.props.index )
+                this.setState( {editing: false});
+            },
+            renderForm:function(){
+                return(    
+                    <div className="commentContainer">
+                        <textarea ref="newText" defaultValue={ this.props.children}></textarea>
+                        <button onClick={ this.save } className="button-success"> Save </button>
+                    </div>
+                    )
             },
             render: function () {
-                var msg;
-                if( this.state.checked ) {
-                    msg = "checked"
-                }else{
-                    msg = "unchecked"
+                if( this.state.editing){
+                    return this.renderForm();
+                } else{
+                    return this.renderNormal();
                 }
-
-                return (
-                <div>
-                    <input onChange={ this.handleChecked } type="checkbox" defaultChecked={ this.state.checked } />
-                    <h3>{ msg } </h3>
-                    <p>{ this.props.title }</p>
-                </div>
-                )
             }
         });
+
+        // 在调用的时候，如果想要调用多次组件，那么也需要给组件一个根标签
         ReactDOM.render( 
-            <CheckBox title="属性"/>,
+            <Borad />,
             document.getElementById("container")
         );
-
-        /**
-            属性和状态两个的 区别是在于：
-                属性一旦定义了，就没有办法改变它了。  this.props.title
-                状态不一样，状态可以通过具体的业务逻辑去改变它。 
-
-            状态和属性的最大区别就是，属性不能够改变，状态经常被改变的。
-            另外一个是，属性是在组件当中 书写的，状态是在初始化的时候就有了，设定好的。
-
-            数据，可以写在状态里面，这样，就可以对数据进行增删改查，
-            这就是有变化的东西，这样就可以通过状态去书写对顶的数据了。
-
-            属性，是不可以改变的，在组件之间去传递就是了。
-
-
-            以上就是状态的应用。
-        */ 
     </script>
 </body>
 ```
