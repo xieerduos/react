@@ -114,7 +114,7 @@ late.zip
 #### 事件的使用
 ###### 引入css样式
 ```html
-    <link rel="stylesheet" href="../css/main.css">    <!-- 下面的所有 body 都得在 head 中引入这个css样式 -->
+    <link rel="stylesheet" href="../css/main.css">    <!-- 下面的所有 body 都得在 head 中引入这个 css 样式 -->
 ```
 
 ```html
