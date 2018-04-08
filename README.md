@@ -18,7 +18,10 @@
 
 #### ReactDOM.render  的介绍。
 1. 下载模板
-![地址](http://oceanwoo.gihub.io/ReactByhenry/ReactTemplate.zip)
+```s
+    $  start iexplore  http://www.thenewstep.com/ReactByHenry/ReactTemp
+late.zip
+```
 2. src/demos/index.html 写入以下内容
 ```html
     <!-- 容器 -->
