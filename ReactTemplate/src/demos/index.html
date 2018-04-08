@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>React-Template</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <script src="../js/react.min.js"></script>
+    <script src="../js/react-dom.min.js"></script>
+    <script src="../js/browser.min.js"></script>
+</head>
+<body>
+    <!-- 容器 -->
+    <div id="container"> </div>
+    <script type="text/babel"> 
+
+        var Borad = React.createClass({
+            getInitialState:function(){
+                return ({
+                    comments: []
+                });
+            },
+            updateComment: function(newText, i){
+                // console.log(newText,i );
+                var arr = this.state.comments;
+                arr[i] = newText;
+                // 更新我们的状态
+                this.setState( { comments: arr } );
+            }
+            ,
+            removeComment:function(i){
+                // console.log(i);
+                var arr = this.state.comments;
+                arr.splice(i,1); // arr.splice(从那个下标开始删除,删除多少个)
+                // 更新状态
+                this.setState({comments: arr});
+            },
+
+            eachComment: function(item, i){
+                return (
+                    <Comment deleteFromBoard={this.removeComment} updateCommentText={ this.updateComment } key={i} index={i}>{ item }</Comment>
+                );
+            }
+            ,
+            add: function(text) {
+                var arr = this.state.comments;
+                arr.push(text);
+                this.setState({comments: arr});
+            },
+            render: function(){
+                return (
+                    <div>
+                        <button onClick={ this.add.bind(null, "Default text") } className="button-info create">Add New</button>
+                        <div className="board">
+                            {
+                                this.state.comments.map(this.eachComment)
+                            } 
+                        </div>
+                    </div>
+                );
+            }
+        })
+
+    
+        var Comment = React.createClass({
+            getInitialState:function(){
+                return ( { editing: false } );
+            },
+            edit:function(){
+                this.setState( { editing: true });
+            },
+            remove:function(){
+                // alert("removeing comment!")
+                this.props.deleteFromBoard(this.props.index);
+            },
+            renderNormal: function(){
+                return (
+                    <div className="commentContainer">
+                        <div>{ this.props.children }</div>
+                        <button onClick={ this.edit } className="button-primary"> Edit </button>
+                        <button onClick={ this.remove} className="button-danger"> Remove </button>
+                    </div>
+                );
+            },
+
+            save:function(){
+                var val = this.refs.newText.value;
+                // console.log("拿到的值是： ",val);
+                this.props.updateCommentText(val, this.props.index )
+                this.setState( {editing: false});
+            },
+            renderForm:function(){
+                return(    
+                    <div className="commentContainer">
+                        <textarea ref="newText" defaultValue={ this.props.children}></textarea>
+                        <button onClick={ this.save } className="button-success"> Save </button>
+                    </div>
+                    )
+            },
+            render: function () {
+                if( this.state.editing){
+                    return this.renderForm();
+                } else{
+                    return this.renderNormal();
+                }
+            }
+        });
+
+        // 在调用的时候，如果想要调用多次组件，那么也需要给组件一个根标签
+        ReactDOM.render( 
+            <Borad />,
+            document.getElementById("container")
+        );
+    </script>
+</body>
+</html>
