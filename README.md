@@ -75,6 +75,7 @@ late.zip
     <div id="container">
 
     </div>
+    d
     <!-- // babel 可以将reactjs代码翻译成浏览器可以识别的代码 -->
     <script type="text/babel"> 
         
@@ -111,6 +112,11 @@ late.zip
 </body>
 ```
 #### 事件的使用
+###### 引入css样式
+```html
+    <link rel="stylesheet" href="../css/main.css">
+```
+
 ```html
 <body>
     <!-- 容器 -->
